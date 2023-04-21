@@ -3,6 +3,7 @@ echo ""
 
 useage() {
 
+  echo ""
   echo "Script to copy a simulation replicate into a dataset with the directory structure"
   echo "suitable for the atb acsc repository at https://molecular-dynamics.atb.uq.edu.au"
   echo ""
@@ -24,6 +25,7 @@ useage() {
   echo "  -q or --output_path    : Place to save output. Default is current working directory."
   echo ""
   echo "  -f or --ff_path        : path to the folder containing the majority of .itp files. Required."
+  echo "                           currently buggy, waiting on clarification from sharif on how to handle this."
   echo ""
   echo "  -r or --rep            : replicate number.  Doesn't do anything right now. Optional."
   echo ""
