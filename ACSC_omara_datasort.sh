@@ -1,4 +1,5 @@
 #!/bin/bash
+echo ""
 
 useage() {
 
@@ -47,7 +48,7 @@ help=false
 output_path="./"
 
 # Parse command line arguments
-ARGS=$(getopt -o hi:p:o:f::r:x: --long help,input_sysname:,input_path:,output_sysname:,ff_path:,rep:,extra_itp:,dry-run:,notrj -- "$@")
+ARGS=$(getopt -o hi:p:o:q:f::r:x: --long help,input_sysname:,input_path:,output_sysname:,ff_path:,rep:,extra_itp:,dry-run,notrj -- "$@")
 
 #ARGS=$(getopt -o i:p:o:f::r:x: --long input_sysname:,input_path:,output_sysname:,ff_path:,rep:,extra_itp:,dry-run: -- "$@")
 eval set -- "$ARGS"
@@ -67,7 +68,7 @@ while true; do
       output_sysname="$2"
       shift 2
       ;;
-    -po|--output_path)
+    -q|--output_path)
       output_path="$2"
       shift 2
       ;;
@@ -160,7 +161,8 @@ fi
 echo "Input sysname: $input_sysname"
 echo "Input filepath: $input_path"
 echo "Output sysname: $output_sysname"
-echo "trj:" $trj 
+echo "Output filepath: $output_path"
+echo "--notrj:" $notrj 
 if [ -n "$rep" ]; then
   echo "Rep: $rep"
 fi
@@ -169,8 +171,11 @@ if [ ${#extra_itp[@]} -gt 0 ]; then
   echo "Extra ITP files: ${extra_itp[@]}"
 fi
 if [ "$dry_run" = true ]; then
+  echo "" 
   echo "Dry run; exiting now"
   exit 0
+else
+  echo "--dry-run:" $dry_run
 fi
 # if [ "$trj" = true ]; then
 #   echo "--trj specified; trajectory files will be copied"

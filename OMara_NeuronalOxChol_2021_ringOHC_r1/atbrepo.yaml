@@ -1,0 +1,12 @@
+title: "This will appear as the title of the simulation on the ACSC website. Should be enclosed in quotation marks."
+notes: "This will appear as a description of the simulation on the ACSC website. Should be enclosed in quotation marks.  If the data is related to a publication, the DOI of the publication can also be included in this field."
+program: GROMACS
+organization: omara
+tags: Freeform text tags for the simulation, prefixed with a hyphen. Note that some tags are prefixed with "item-", as shown below
+    - replicate-[number] of [total number]
+    - protein-[name of protein]
+    - peptide-[name of peptide]
+    - lipid-[name of lipid]
+    - membrane-[type of membrane]
+    - PDB-[pdb code]
+    - solvent-[name of solvent]
