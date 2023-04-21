@@ -1,13 +1,53 @@
 #!/bin/bash
 
+useage() {
+
+  echo "Script to copy a simulation replicate into a dataset with the directory structure"
+  echo "suitable for the atb acsc repository at https://molecular-dynamics.atb.uq.edu.au"
+  echo ""
+  echo "options:"
+  echo ""
+  echo "  -i or --input_sysname  : the system name of the simulation replicate.  Required."
+  echo "                           Input files should have names like input_sysname.mdp,"
+  echo "                           input_sysname.tpr, input_sysname.top, etc, etc "
+  echo ""
+  echo "  -p or --input_path     : the path to the simulation replicate.  Required."
+  echo ""
+  echo "  -o or --output_sysname : System name to be used by the ATB ACSC repository. Required."
+  echo "                           This must be unique.  Our standard structure is "
+  echo "                           OMara_[Detailed-project-name-and-year]_[Detailed-system-name]_r[number]"
+  echo "                           for example, replicate one of the ring oxidised cholesterol system from"
+  echo "                           our Neuronal OxChol paper doi.org/10.1021/acschemneuro.1c00395"
+  echo "                           would have the name: OMara_NeuronalOxChol-2021_ringOHC_r1"
+  echo ""
+  echo "  -q or --output_path    : Place to save output. Default is current working directory."
+  echo ""
+  echo "  -f or --ff_path        : path to the folder containing the majority of .itp files. Required."
+  echo ""
+  echo "  -r or --rep            : replicate number.  Doesn't do anything right now. Optional."
+  echo ""
+  echo "  -x or --extra_itp      : path to an additional .itp file from outside --ff_path. Optional."
+  echo "                           Can be repeated multiple times."
+  echo ""
+  echo "  --dry-run              : print all inputs, check input_path and ff_path are valid, then exit"
+  echo ""
+  echo "  --notrj                : copy all simulation data except trajectory files. Optional."  
+  echo ""
+  echo "  -h                     : print this message then exit."  
+  echo ""
+  exit 0
+}
+
 # Default values
 
 extra_itp=()
 dry_run=false
 notrj=false
 help=false
+output_path="./"
+
 # Parse command line arguments
-ARGS=$(getopt -o hi:p:o:f::r:x: --long input_sysname:,input_path:,output_sysname:,ff_path:,rep:,extra_itp:,dry-run:,notrj -- "$@")
+ARGS=$(getopt -o hi:p:o:f::r:x: --long help,input_sysname:,input_path:,output_sysname:,ff_path:,rep:,extra_itp:,dry-run:,notrj -- "$@")
 
 #ARGS=$(getopt -o i:p:o:f::r:x: --long input_sysname:,input_path:,output_sysname:,ff_path:,rep:,extra_itp:,dry-run: -- "$@")
 eval set -- "$ARGS"
@@ -25,6 +65,10 @@ while true; do
       ;;
     -o|--output_sysname)
       output_sysname="$2"
+      shift 2
+      ;;
+    -po|--output_path)
+      output_path="$2"
       shift 2
       ;;
     -f|--ff_path)
@@ -47,9 +91,10 @@ while true; do
       notrj=true
       shift
       ;;
-    -h)
+    -h|--help)
       help=true
-      shift
+      useage
+      exit 0
       ;;
       
     # --trj)
@@ -62,45 +107,13 @@ while true; do
       ;;
     *)
       echo "Invalid option: $1"
+      usage
       exit 1
       ;;
   esac
 done
 
-if [ "$help" = true ]; then
-  echo "script to copy a simulation replicate into a dataset with the directory structure"
-  echo "suitable for the atb acsc repository at https://molecular-dynamics.atb.uq.edu.au"
-  echo ""
-  echo "options:"
-  echo ""
-  echo "  -i or --input_sysname  : the system name of the simulation replicate.  Required."
-  echo "                           Input files should have names like input_sysname.mdp,"
-  echo "                           input_sysname.tpr, input_sysname.top, etc, etc "
-  echo ""
-  echo "  -p or --input_path     : the path to the simulation replicate.  Required."
-  echo ""
-  echo "  -o or --output_sysname : System name to be used by the ATB ACSC repository. Required."
-  echo "                           This must be unique.  Our standard structure is "
-  echo "                           OMara_[Detailed-project-name-and-year]_[Detailed-system-name]_r[number]"
-  echo "                           for example, replicate one of the ring oxidised cholesterol system from"
-  echo "                           our Neuronal OxChol paper doi.org/10.1021/acschemneuro.1c00395"
-  echo "                           would have the name: OMara_NeuronalOxChol-2021_ringOHC_r1"
-  echo ""
-  echo "  -f or --ff_path        : path to the folder containing the majority of .itp files. Required."
-  echo ""
-  echo "  -r or --rep            : replicate number.  Doesn't do anything right now. Optional."
-  echo ""
-  echo "  -x or --extra_itp      : path to an additional .itp file from outside --ff_path. Optional."
-  echo "                           Can be repeated multiple times."
-  echo ""
-  echo "  --dry-run              : print all inputs, check input_path and ff_path are valid, then exit"
-  echo ""
-  echo "  --notrj                : copy all simulation data except trajectory files. Optional."  
-  echo ""
-  echo "  -h                     : print this message then exit."  
-  echo ""
-  exit 0
-fi
+
 # check that variables are set
 if [ -z "$input_sysname" ] ; then
   echo "Error: --input_sysname not specified"
@@ -120,6 +133,12 @@ fi
 
 if [ -z "$output_sysname" ] ; then
   echo "Error: --output_sysname not specified"
+  exit 1
+fi
+
+# Check that output path folder exists
+if [ ! -d "$output_path" ]; then
+  echo "Error: --output_path folder '$output_path' not found "
   exit 1
 fi
 
@@ -170,7 +189,7 @@ fi
 
 mkdir ${output_sysname} -p
 
-cat <<EOF > ${output_sysname}/atbrepo.yaml
+cat <<EOF > ${output_path}/${output_sysname}/atbrepo.yaml
 title: "This will appear as the title of the simulation on the ACSC website. Should be enclosed in quotation marks."
 notes: "This will appear as a description of the simulation on the ACSC website. Should be enclosed in quotation marks.  If the data is related to a publication, the DOI of the publication can also be included in this field."
 program: GROMACS
@@ -187,68 +206,68 @@ EOF
 
 # copy control files
 
-mkdir ${output_sysname}/control -p
-cp ${input_path}/${input_sysname}.mdp ${output_sysname}/control/${output_sysname}_control_00001.mdp
+mkdir ${output_path}/${output_sysname}/control -p
+cp ${input_path}/${input_sysname}.mdp ${output_path}/${output_sysname}/control/${output_sysname}_control_00001.mdp
 
 # copy energy files if any exist
 
-mkdir ${output_sysname}/energy -p
+mkdir ${output_path}/${output_sysname}/energy -p
 if [ -f "${input_path}/${input_path}.edr" ]; then 
-    cp ${input_path}/${input_sysname}.edr ${output_sysname}/energy/${output_sysname}_energy_00001.edr
+    cp ${input_path}/${input_sysname}.edr ${output_path}/${output_sysname}/energy/${output_sysname}_energy_00001.edr
 fi
 
 # copy final coordinates if any exist
-mkdir ${output_sysname}/final-coordinates -p
+mkdir ${output_path}/${output_sysname}/final-coordinates -p
 if [ -f "${input_path}/${input_sysname}.gro" ]; then 
-    cp ${input_path}/${input_sysname}.gro ${output_sysname}/final-coordinates/${output_sysname}_final-coordinates_00001.gro
+    cp ${input_path}/${input_sysname}.gro ${output_path}/${output_sysname}/final-coordinates/${output_sysname}_final-coordinates_00001.gro
 fi
 
 # copy input coordinates if any exist
-mkdir ${output_sysname}/input-coordinates -p
+mkdir ${output_path}/${output_sysname}/input-coordinates -p
 if [ -f "${input_path}/${input_sysname}_start.gro" ]; then 
-    cp ${input_path}/${input_sysname}_start.gro ${output_sysname}/input-coordinates/${output_sysname}_input-coordinates_00001.gro
+    cp ${input_path}/${input_sysname}_start.gro ${output_path}/${output_sysname}/input-coordinates/${output_sysname}_input-coordinates_00001.gro
 fi
 
 # copy forcefield files itp files etc)
-mkdir ${output_sysname}/forcefield-files -p
-cp -r ${ff_path} ${output_sysname}/forcefield-files/${output_sysname}_forcefield-files.ff
+mkdir ${output_path}/${output_sysname}/forcefield-files -p
+cp -r ${ff_path} ${output_path}/${output_sysname}/forcefield-files/${output_sysname}_forcefield-files.ff
 
 # grab extra itp files if any were specified, like the protein.itp you get from go_martinize, add them to the forcefield files
 if [ ${#extra_itp[@]} -gt 0 ]; then
   for $itp in ${extra_itp[@]}; do
-  cp $itp  ${output_sysname}/forcefield-files/${output_sysname}_forcefield-files.ff/
+  cp $itp  ${output_path}/${output_sysname}/forcefield-files/${output_sysname}_forcefield-files.ff/
   done
 fi
 
 # copy log file if it exists
-mkdir ${output_sysname}/log -p
+mkdir ${output_path}/${output_sysname}/log -p
 if [ -f "${input_path}/${input_sysname}.log" ]; then 
-    cp ${input_path}/${input_sysname}.log ${output_sysname}/input-coordinates/${output_sysname}_log_00001.log
+    cp ${input_path}/${input_sysname}.log ${output_path}/${output_sysname}/input-coordinates/${output_sysname}_log_00001.log
 fi
 
 # make a reference coordinates folder (required)
 # user will have to add any reference coordinates manually for now
-mkdir ${output_sysname}/reference-coordinates -p
+mkdir ${output_path}/${output_sysname}/reference-coordinates -p
 
 # copy topology file
-mkdir ${output_sysname}/topology -p
-cp ${input_path}/${input_sysname}.top ${output_sysname}/topology/${output_sysname}_topology_00001.top
+mkdir ${output_path}/${output_sysname}/topology -p
+cp ${input_path}/${input_sysname}.top ${output_path}/${output_sysname}/topology/${output_sysname}_topology_00001.top
 
-mkdir ${output_sysname}/trajectory -p # folder is required regardless of whether trajectories are included
+mkdir ${output_path}/${output_sysname}/trajectory -p # folder is required regardless of whether trajectories are included
 # copy trajectories unless --notrj was specified
 if [ "$notrj" = false ]; then
     files=false
     if [ -f "${input_path}/${input_sysname}.xtc" ]; then 
         echo "copying trajectory file ${input_path}/${input_sysname}.xtc"
         echo
-        rsync --progress ${input_path}/${input_sysname}.xtc ${output_sysname}/trajectory/${output_sysname}_trajectory_00001.xtc # use rsync for a progress bar and for data fidelity; trajectories are big
+        rsync --progress ${input_path}/${input_sysname}.xtc ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.xtc # use rsync for a progress bar and for data fidelity; trajectories are big
         files=true
     fi
     if [ -f "${input_path}/${input_sysname}.trr" ]; then 
         echo "copying trajectory file ${input_path}/${input_sysname}.trr"
         echo "ALERT: MAKE SURE YOU ACTUALLY WANT THIS, .trr FILES ARE USUALLY ENOURMOUS"
         echo
-        rsync --progress ${input_path}/${input_sysname}.trr ${output_sysname}/trajectory/${output_sysname}_trajectory_00001.trr # use rsync for a progress bar and for data fidelity; trajectories are big
+        rsync --progress ${input_path}/${input_sysname}.trr ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.trr # use rsync for a progress bar and for data fidelity; trajectories are big
         files=true
     fi
     if files=false; then
