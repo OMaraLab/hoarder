@@ -46,7 +46,6 @@ useage() {
 extra_itp=()
 dry_run=false
 notrj=false
-help=false
 output_path="./"
 
 # Parse command line arguments
@@ -94,7 +93,6 @@ while true; do
       shift
       ;;
     -h|--help)
-      help=true
       useage
       exit 0
       ;;
