@@ -17,7 +17,7 @@ useage() {
   echo ""
   echo "  -o or --output_sysname : System name to be used by the ATB ACSC repository. Required."
   echo "                           This must be unique.  Our standard structure is "
-  echo "                           OMara_[Detailed-project-name-and-year]_[Detailed-system-name]_r[number]"
+  echo "                           OMara_[Detailed-project-name]-[publication-year]_[Detailed-system-name]_r[number]"
   echo "                           for example, replicate one of the ring oxidised cholesterol system from"
   echo "                           our Neuronal OxChol paper doi.org/10.1021/acschemneuro.1c00395"
   echo "                           would have the name: OMara_NeuronalOxChol-2021_ringOHC_r1"
