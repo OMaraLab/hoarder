@@ -50,7 +50,6 @@ output_path="./"
 # Parse command line arguments
 ARGS=$(getopt -o hi:p:o:q:f::r:x: --long help,input_sysname:,input_path:,output_sysname:,ff_path:,rep:,extra_itp:,dry-run,notrj -- "$@")
 
-#ARGS=$(getopt -o i:p:o:f::r:x: --long input_sysname:,input_path:,output_sysname:,ff_path:,rep:,extra_itp:,dry-run: -- "$@")
 eval set -- "$ARGS"
 
 # Process options and their arguments
@@ -97,11 +96,6 @@ while true; do
       useage
       exit 0
       ;;
-      
-    # --trj)
-    #   trj=true
-    #   shift
-    #   ;;
     --)
       shift
       break
