@@ -313,7 +313,9 @@ if [ "$multistep" = false ]; then
 else
 
     # multistep runs
+    # right now I've spun these off into their own function because they're a mess to deal with
     # this needs testing and should always be inspected manually
+    
     echo "attempting to copy a multistep system"
     echo "these are not named consistently and copying may be unreliable, please verify your output is what you intended"
 
