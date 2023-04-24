@@ -229,12 +229,18 @@ fi
 
 # copy forcefield files itp files etc)
 mkdir ${output_path}/${output_sysname}/forcefield-files -p
-cp -r ${ff_path} ${output_path}/${output_sysname}/forcefield-files/${output_sysname}_forcefield-files.ff
+cp ${ff_path}/* ${output_path}/${output_sysname}/forcefield-files/
 
 # grab extra itp files if any were specified, like the protein.itp you get from go_martinize, add them to the forcefield files
 if [ ${#extra_itp[@]} -gt 0 ]; then
   for $itp in ${extra_itp[@]}; do
-  cp $itp  ${output_path}/${output_sysname}/forcefield-files/${output_sysname}_forcefield-files.ff/
+    $fname=$(basename "$itp")
+    if test -e "${output_path}/${output_sysname}/forcefield-files/${fname}"
+    then
+      echo "ERROR: You have specified --extra_itp ${itp} , however a file with the name ${fname} already exists in ${output_path}/${output_sysname}/forcefield-files/"
+      exit 1
+    fi
+    cp $itp  ${output_path}/${output_sysname}/forcefield-files/
   done
 fi
 
