@@ -418,3 +418,6 @@ else
         echo "--notrj specified, trajectories not copied"
     fi
 fi
+
+echo ""
+echo "copying complete.  You will need to edit ${output_path}/${output_sysname}/atbrepo.yaml with information relevant to your system."
