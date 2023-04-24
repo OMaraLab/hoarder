@@ -43,6 +43,7 @@ useage() {
 
 # Default values
 
+working=$(PWD)
 extra_itp=()
 dry_run=false
 notrj=false
@@ -90,7 +91,7 @@ while true; do
       shift
       ;;
     --multistep)
-      dry_run=true
+      multistep=true
       shift
       ;;
     --notrj)
@@ -176,6 +177,22 @@ if [ "$dry_run" = true ]; then
 else
   echo "--dry-run:" $dry_run
 fi
+  echo "--multistep:" $multistep
+if [ "$multistep" = true ]; then
+  echo "Will look for all files distributed across multiple run steps" 
+
+    # set up rename_files function for multistep runs
+      rename_files() {
+        local old_pattern="$1"
+        local new_pattern="$2"
+        for file in "$old_pattern"*; do
+          mv "$file" "${file/$old_pattern/$new_pattern}"
+        done
+}
+
+
+fi
+
 # if [ "$trj" = true ]; then
 #   echo "--trj specified; trajectory files will be copied"
 # fi
@@ -208,81 +225,193 @@ tags:
     - solvent-[name of solvent]
 EOF
 
-# copy control files
+if [ "$multistep" = false ]; then
 
-mkdir ${output_path}/${output_sysname}/control -p
-cp ${input_path}/${input_sysname}.mdp ${output_path}/${output_sysname}/control/${output_sysname}_control_00001.mdp
+    # copying for normal runs; this should be most cases
 
-# copy energy files if any exist
+    # copy control files
 
-mkdir ${output_path}/${output_sysname}/energy -p
-if [ -f "${input_path}/${input_path}.edr" ]; then 
-    cp ${input_path}/${input_sysname}.edr ${output_path}/${output_sysname}/energy/${output_sysname}_energy_00001.edr
-fi
+    mkdir ${output_path}/${output_sysname}/control -p
+    cp ${input_path}/${input_sysname}.mdp ${output_path}/${output_sysname}/control/${output_sysname}_control_00001.mdp
 
-# copy final coordinates if any exist
-mkdir ${output_path}/${output_sysname}/final-coordinates -p
-if [ -f "${input_path}/${input_sysname}.gro" ]; then 
-    cp ${input_path}/${input_sysname}.gro ${output_path}/${output_sysname}/final-coordinates/${output_sysname}_final-coordinates_00001.gro
-fi
+    # copy energy files if any exist
 
-# copy input coordinates if any exist
-mkdir ${output_path}/${output_sysname}/input-coordinates -p
-if [ -f "${input_path}/${input_sysname}_start.gro" ]; then 
-    cp ${input_path}/${input_sysname}_start.gro ${output_path}/${output_sysname}/input-coordinates/${output_sysname}_input-coordinates_00001.gro
-fi
-
-# copy forcefield files itp files etc)
-mkdir ${output_path}/${output_sysname}/forcefield-files -p
-cp ${ff_path}/* ${output_path}/${output_sysname}/forcefield-files/
-
-# grab extra itp files if any were specified, like the protein.itp you get from go_martinize, add them to the forcefield files
-if [ ${#extra_itp[@]} -gt 0 ]; then
-  for $itp in ${extra_itp[@]}; do
-    $fname=$(basename "$itp")
-    if test -e "${output_path}/${output_sysname}/forcefield-files/${fname}"
-    then
-      echo "ERROR: You have specified --extra_itp ${itp} , however a file with the name ${fname} already exists in ${output_path}/${output_sysname}/forcefield-files/"
-      exit 1
+    mkdir ${output_path}/${output_sysname}/energy -p
+    if [ -f "${input_path}/${input_path}.edr" ]; then 
+        cp ${input_path}/${input_sysname}.edr ${output_path}/${output_sysname}/energy/${output_sysname}_energy_00001.edr
     fi
-    cp $itp  ${output_path}/${output_sysname}/forcefield-files/
-  done
-fi
 
-# copy log file if it exists
-mkdir ${output_path}/${output_sysname}/log -p
-if [ -f "${input_path}/${input_sysname}.log" ]; then 
-    cp ${input_path}/${input_sysname}.log ${output_path}/${output_sysname}/input-coordinates/${output_sysname}_log_00001.log
-fi
-
-# make a reference coordinates folder (required)
-# user will have to add any reference coordinates manually for now
-mkdir ${output_path}/${output_sysname}/reference-coordinates -p
-
-# copy topology file
-mkdir ${output_path}/${output_sysname}/topology -p
-cp ${input_path}/${input_sysname}.top ${output_path}/${output_sysname}/topology/${output_sysname}_topology_00001.top
-
-mkdir ${output_path}/${output_sysname}/trajectory -p # folder is required regardless of whether trajectories are included
-# copy trajectories unless --notrj was specified
-if [ "$notrj" = false ]; then
-    files=false
-    if [ -f "${input_path}/${input_sysname}.xtc" ]; then 
-        echo "copying trajectory file ${input_path}/${input_sysname}.xtc"
-        echo
-        rsync --progress ${input_path}/${input_sysname}.xtc ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.xtc # use rsync for a progress bar and for data fidelity; trajectories are big
-        files=true
+    # copy final coordinates if any exist
+    mkdir ${output_path}/${output_sysname}/final-coordinates -p
+    if [ -f "${input_path}/${input_sysname}.gro" ]; then 
+        cp ${input_path}/${input_sysname}.gro ${output_path}/${output_sysname}/final-coordinates/${output_sysname}_final-coordinates_00001.gro
     fi
-    if [ -f "${input_path}/${input_sysname}.trr" ]; then 
-        echo "copying trajectory file ${input_path}/${input_sysname}.trr"
-        echo "ALERT: MAKE SURE YOU ACTUALLY WANT THIS, .trr FILES ARE USUALLY ENOURMOUS"
-        echo
-        rsync --progress ${input_path}/${input_sysname}.trr ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.trr # use rsync for a progress bar and for data fidelity; trajectories are big
-        files=true
+
+    # copy input coordinates if any exist
+    mkdir ${output_path}/${output_sysname}/input-coordinates -p
+    if [ -f "${input_path}/${input_sysname}_start.gro" ]; then 
+        cp ${input_path}/${input_sysname}_start.gro ${output_path}/${output_sysname}/input-coordinates/${output_sysname}_input-coordinates_00001.gro
     fi
-    if files=false; then
-        "ALERT: no trajectory files were found with file names ${input_path}/${input_sysname}.(xtc|trr)"
+
+    # copy forcefield files itp files etc)
+    mkdir ${output_path}/${output_sysname}/forcefield-files -p
+    cp ${ff_path}/* ${output_path}/${output_sysname}/forcefield-files/
+
+    # grab extra itp files if any were specified, like the protein.itp you get from go_martinize, add them to the forcefield files
+    if [ ${#extra_itp[@]} -gt 0 ]; then
+      for $itp in ${extra_itp[@]}; do
+        $fname=$(basename "$itp")
+        if test -e "${output_path}/${output_sysname}/forcefield-files/${fname}"
+        then
+          echo "ERROR: You have specified --extra_itp ${itp} , however a file with the name ${fname} already exists in ${output_path}/${output_sysname}/forcefield-files/"
+          exit 1
+        fi
+        cp $itp  ${output_path}/${output_sysname}/forcefield-files/
+      done
     fi
+
+    # copy log file if it exists
+    mkdir ${output_path}/${output_sysname}/log -p
+    if [ -f "${input_path}/${input_sysname}.log" ]; then 
+        cp ${input_path}/${input_sysname}.log ${output_path}/${output_sysname}/log/${output_sysname}_log_00001.log
+    fi
+
+    # make a reference coordinates folder (required)
+    # user will have to add any reference coordinates manually for now
+    mkdir ${output_path}/${output_sysname}/reference-coordinates -p
+
+    # copy topology file
+    mkdir ${output_path}/${output_sysname}/topology -p
+    cp ${input_path}/${input_sysname}.top ${output_path}/${output_sysname}/topology/${output_sysname}_topology_00001.top
+
+    mkdir ${output_path}/${output_sysname}/trajectory -p # folder is required regardless of whether trajectories are included
+    # copy trajectories unless --notrj was specified
+    if [ "$notrj" = false ]; then
+        files=false
+        if [ -f "${input_path}/${input_sysname}.xtc" ]; then 
+            echo "copying trajectory file ${input_path}/${input_sysname}.xtc"
+            echo
+            rsync --progress ${input_path}/${input_sysname}.xtc ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.xtc # use rsync for a progress bar and for data fidelity; trajectories are big
+            files=true
+        fi
+        if [ -f "${input_path}/${input_sysname}.trr" ]; then 
+            echo "copying trajectory file ${input_path}/${input_sysname}.trr"
+            echo "ALERT: MAKE SURE YOU ACTUALLY WANT THIS, .trr FILES ARE USUALLY ENOURMOUS"
+            echo
+            rsync --progress ${input_path}/${input_sysname}.trr ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.trr # use rsync for a progress bar and for data fidelity; trajectories are big
+            files=true
+        fi
+        if files=false; then
+            "ALERT: no trajectory files were found with file names ${input_path}/${input_sysname}.(xtc|trr)"
+        fi
+    else
+        echo "--notrj specified, trajectories not copied"
+    fi
+
 else
-    echo "--notrj specified, trajectories not copied"
+
+    # multistep runs
+    # this needs testing and should always be inspected manually
+    echo "attempting to copy a multistep system"
+    echo "these are not named consistently and copying may be unreliable, please verify your output is what you intended"
+
+    # copy control files
+
+    mkdir ${output_path}/${output_sysname}/control -p
+    cp ${input_path}/*.mdp ${output_path}/${output_sysname}/control/ # copy all mdps for multistep run
+    cd ${output_path}/${output_sysname}/control/
+    rename_files ${input_sysname}"." ${output_sysname}_control_000 # rename mdps from ${input_sysname}.01.mdp to ${output_sysname}_control_00001.mdp
+    cd $working # in case $output_path is relative to working directory
+
+    # copy energy files if any exist
+
+    mkdir ${output_path}/${output_sysname}/energy -p
+    cp ${input_path}/*.edr energy/ # copy all edrs for multistep run
+    cd ${output_path}/${output_sysname}/energy
+    rename_files ${input_sysname}"." ${output_sysname}_energy_000 # rename edrs from ${input_sysname}.01.edr to ${output_sysname}_energy_00001.edr
+    cd $working # in case $output_path is relative to working directory
+
+    # copy final coordinates if any exist
+    mkdir ${output_path}/${output_sysname}/final-coordinates -p
+    cd ${input_path}
+    flist=$(find . -type f -name "${input_sysname}.[0-9]+.gro")
+    final=$(echo "$flist" | sort -n | tail -n 1)
+    cd $working # in case $output_path is relative to working directory
+    cp ${input_path}/$final ${output_path}/${output_sysname}/${output_sysname}_final-coordinates_00001.gro
+
+    # copy input coordinates if any exist
+    mkdir ${output_path}/${output_sysname}/input-coordinates -p
+    if [ -f "${input_path}/${input_sysname}.00.gro" ]; then 
+        cp ${input_path}/${input_sysname}".00.gro" ${output_path}/${output_sysname}/input-coordinates/${output_sysname}_input-coordinates_00001.gro
+    fi
+
+    # copy forcefield files itp files etc)
+    mkdir ${output_path}/${output_sysname}/forcefield-files -p
+    cp ${ff_path}/* ${output_path}/${output_sysname}/forcefield-files/
+
+    # grab extra itp files if any were specified, like the protein.itp you get from go_martinize, add them to the forcefield files
+    if [ ${#extra_itp[@]} -gt 0 ]; then
+      for $itp in ${extra_itp[@]}; do
+        $fname=$(basename "$itp")
+        if test -e "${output_path}/${output_sysname}/forcefield-files/${fname}"
+        then
+          echo "ERROR: You have specified --extra_itp ${itp} , however a file with the name ${fname} already exists in ${output_path}/${output_sysname}/forcefield-files/"
+          exit 1
+        fi
+        cp $itp  ${output_path}/${output_sysname}/forcefield-files/
+      done
+    fi
+
+    # copy log file if it exists
+    mkdir ${output_path}/${output_sysname}/log -p
+    cp ${input_path}/*.log ${output_path}/${output_sysname}/log/*
+    cd ${output_path}/${output_sysname}/log/
+    rename_files ${input_sysname}"." ${output_sysname}_log_000 # rename logs from ${input_sysname}.01.log to ${output_sysname}_log_00001.log
+    cd $working # in case $output_path is relative to working directory
+
+    # make a reference coordinates folder (required)
+    # user will have to add any reference coordinates manually for now
+    mkdir ${output_path}/${output_sysname}/reference-coordinates -p
+
+    # copy topology file
+    mkdir ${output_path}/${output_sysname}/topology -p
+    echo "copying topology files:"
+    toplist=$(ls "${input_path}/*.top")
+    if [ ${#toplist[@]} -gt 1 ]; then
+      echo "ERROR:  more than one file found matching name ${input_path}/*.top"
+      echo "Copying all files, you will need to resolve this yourself."
+      cp ${input_path}/*.top ${output_path}/${output_sysname}/topology
+    else
+      cp ${input_path}/*.top ${output_path}/${output_sysname}/topology/${output_sysname}_topology_00001.top
+    fi    
+
+    
+    mkdir ${output_path}/${output_sysname}/trajectory -p # folder is required regardless of whether trajectories are included
+    # copy trajectories unless --notrj was specified
+    if [ "$notrj" = false ]; then
+        files=false
+        xtclist=(ls "${input_path}/*.xtc")
+        if [ ${#xtclist[@]} -gt 0 ]; then
+            echo "copying trajectory file ${input_path}/*.xtc"
+            rsync --progress --include="*.xtc" --exclude="*" ${input_path}/"*" ${output_path}/${output_sysname}/trajectory/ # use rsync for a progress bar and for data fidelity; trajectories are big
+            files=true
+        fi
+        trrlist=(ls "${input_path}/*.trr")
+            if [ ${#trrlist[@]} -gt 0 ]; then
+            echo "copying trajectory files ${input_path}/*.trr"
+            echo "ALERT: MAKE SURE YOU ACTUALLY WANT THIS, .trr FILES ARE USUALLY ENOURMOUS"
+            rsync --progress --include="*.trr" --exclude="*" ${input_path}/"*" ${output_path}/${output_sysname}/trajectory/ # use rsync for a progress bar and for data fidelity; trajectories are big
+            files=true
+        fi
+        if files=false; then
+            "ALERT: no trajectory files were found with file names ${input_path}/*.(xtc|trr)"
+        else
+          cd $working
+          cd ${output_path}/${output_sysname}/trajectory/
+          rename_files ${input_sysname}"." ${output_sysname}_trajectory_000 # rename trajectory from ${input_sysname}.01.(xtc|trr) to ${output_sysname}_trajectory_00001.(xtc|trr)
+
+        fi
+    else
+        echo "--notrj specified, trajectories not copied"
+    fi
 fi
