@@ -259,11 +259,12 @@ if [ "$multistep" = false ]; then
 
     # grab extra itp files if any were specified, like the protein.itp you get from go_martinize, add them to the forcefield files
     if [ ${#extra_itp[@]} -gt 0 ]; then
-      for $itp in ${extra_itp[@]}; do
-        $fname=$(basename "$itp")
+      for itp in ${extra_itp[@]}; do
+        fname=$(basename "$itp")
         if test -e "${output_path}/${output_sysname}/forcefield-files/${fname}"
         then
           echo "ERROR: You have specified --extra_itp ${itp} , however a file with the name ${fname} already exists in ${output_path}/${output_sysname}/forcefield-files/"
+          echo "Please fix this and run your command again"
           exit 1
         fi
         cp $itp  ${output_path}/${output_sysname}/forcefield-files/
@@ -351,11 +352,12 @@ else
 
     # grab extra itp files if any were specified, like the protein.itp you get from go_martinize, add them to the forcefield files
     if [ ${#extra_itp[@]} -gt 0 ]; then
-      for $itp in ${extra_itp[@]}; do
-        $fname=$(basename "$itp")
+      for itp in ${extra_itp[@]}; do
+        fname=$(basename "${itp}")
         if test -e "${output_path}/${output_sysname}/forcefield-files/${fname}"
         then
           echo "ERROR: You have specified --extra_itp ${itp} , however a file with the name ${fname} already exists in ${output_path}/${output_sysname}/forcefield-files/"
+          echo "Please fix this and run your command again"
           exit 1
         fi
         cp $itp  ${output_path}/${output_sysname}/forcefield-files/
