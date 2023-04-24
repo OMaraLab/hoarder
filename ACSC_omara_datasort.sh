@@ -47,9 +47,10 @@ extra_itp=()
 dry_run=false
 notrj=false
 output_path="./"
+multistep=false
 
 # Parse command line arguments
-ARGS=$(getopt -o hi:p:o:q:f::r:x: --long help,input_sysname:,input_path:,output_sysname:,ff_path:,rep:,extra_itp:,dry-run,notrj -- "$@")
+ARGS=$(getopt -o hi:p:o:q:f::r:x: --long help,input_sysname:,input_path:,output_sysname:,ff_path:,rep:,extra_itp:,dry-run,notrj,multistep -- "$@")
 
 eval set -- "$ARGS"
 
@@ -85,6 +86,10 @@ while true; do
       shift 2
       ;;
     --dry-run)
+      dry_run=true
+      shift
+      ;;
+    --multistep)
       dry_run=true
       shift
       ;;
@@ -180,20 +185,20 @@ fi
 echo ""
 echo "Beginning system copy"
 
-if [ -d "$output_sysname" ]; then
-  echo "ALERT: directory '$output_sysname' already exists"
+if [ -d "${output_path}/${output_sysname}" ]; then
+  echo "ALERT: directory '${output_path}/$output_sysname' already exists"
   echo
 fi
 
 
-mkdir ${output_sysname} -p
+mkdir ${output_path}/${output_sysname} -p
 
 cat <<EOF > ${output_path}/${output_sysname}/atbrepo.yaml
 title: "This will appear as the title of the simulation on the ACSC website. Should be enclosed in quotation marks."
 notes: "This will appear as a description of the simulation on the ACSC website. Should be enclosed in quotation marks.  If the data is related to a publication, the DOI of the publication can also be included in this field."
 program: GROMACS
 organization: omara
-tags: Freeform text tags for the simulation, prefixed with a hyphen. Note that some tags are prefixed with "item-", as shown below
+tags:
     - replicate-[number] of [total number]
     - protein-[name of protein]
     - peptide-[name of peptide]
