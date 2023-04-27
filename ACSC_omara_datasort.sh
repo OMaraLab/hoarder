@@ -30,7 +30,11 @@ useage() {
   echo "                           needs to be different to --input_path otherwise it will copy your entire system"
   echo "                           into the forcefield-files folder."
   echo ""
-  echo "  -r or --rep            : replicate number. Changes replicate number in atbrepo.yaml metadata file. Optional."
+  echo "  --rep                  : replicate number of this replicate.  Optional."
+  echo "                           Changes replicate number in atbrepo.yaml metadata file."
+  echo ""
+  echo "  --reps                 : total number of replicates that exist for this system. Optional."
+  echo "                           Changes total replicate number in atbrepo.yaml metadata file."
   echo ""
   echo "  -x or --extra_itp      : path to an additional .itp file from outside --ff_path. Optional."
   echo "                           Can be repeated multiple times."
@@ -54,7 +58,7 @@ output_path="./"
 multistep=false
 
 # Parse command line arguments
-ARGS=$(getopt -o hi:p:o:q:f::r:x: --long help,input_sysname:,input_path:,output_sysname:,ff_path:,rep:,extra_itp:,dry-run,notrj,multistep -- "$@")
+ARGS=$(getopt -o hi:p:o:q:f::x: --long help,input_sysname:,input_path:,output_sysname:,ff_path:,rep:,reps:,extra_itp:,dry-run,notrj,multistep -- "$@")
 
 eval set -- "$ARGS"
 
@@ -81,8 +85,12 @@ while true; do
       ff_path="$2"
       shift 2
       ;;
-    -r|--rep)
-      rep="$2"  # doesn't do anything right now
+    --rep)
+      rep="$2"
+      shift 2
+      ;;
+    --reps)
+      reps="$2"
       shift 2
       ;;
     -x|--extra_itp)
@@ -167,7 +175,10 @@ echo "Output sysname: $output_sysname"
 echo "Output filepath: $output_path"
 echo "--notrj:" $notrj 
 if [ -n "$rep" ]; then
-  echo "Rep: $rep"
+  echo "This replicate: $rep"
+fi
+if [ -n "$reps" ]; then
+  echo "Total replicates: $reps"
 fi
 echo "Forcefield folder path: $ff_path"
 if [ ${#extra_itp[@]} -gt 0 ]; then
@@ -213,12 +224,12 @@ fi
 mkdir ${output_path}/${output_sysname} -p
 
 cat <<EOF > ${output_path}/${output_sysname}/atbrepo.yaml
-title: "This will appear as the title of the simulation on the ACSC website. Should be enclosed in quotation marks. {replicate TKTKTK of 3}"
-notes: "This will appear as a description of the simulation on the ACSC website. Should be enclosed in quotation marks.  If the data is related to a publication, the DOI of the publication can also be included in this field. {replicate TKTKTK of 3}"
+title: "This will appear as the title of the simulation on the ACSC website. Should be enclosed in quotation marks. {replicate TKTKTK of KTKTKT}"
+notes: "This will appear as a description of the simulation on the ACSC website. Should be enclosed in quotation marks.  If the data is related to a publication, the DOI of the publication can also be included in this field. {replicate TKTKTK of KTKTKT}"
 program: GROMACS
 organization: omara
 tags:
-    - replicate-TKTKTK of [total number]
+    - replicate-TKTKTK of KTKTKT
     - forcefield-[forcefield name and version]
     - membrane-[type of membrane]
     - PDB-[pdb code]
@@ -228,8 +239,12 @@ tags:
 THE NEXT LINES ARE TAGS FOR EVERY MOLECULE IN THE SYSTEM.  CHANGE THEM from molecule-MOLNAME to whatever type of molecule they are, eg "lipid-POPC" or "solvent-PW" or "protein-GlyT2".  Remove this line when complete, and the example molecule tags above
 EOF
 
-if [ -n "$rep" ]; then # if rep defined, find and replace placeholder with rep number
+if [ -n "$rep" ]; then # if --rep defined, find and replace placeholder with rep number
   sed -i 's/TKTKTK/'"$rep"'/g' ${output_path}/${output_sysname}/atbrepo.yaml
+fi
+if [ -n "$reps" ]; then # if --reps defined, replace placeholder with total rep number
+  sed -i 's/KTKTKT/'"$reps"'/g' ${output_path}/${output_sysname}/atbrepo.yaml
+
 fi
 
 # if [ "$multistep" = false ]; then
