@@ -24,7 +24,7 @@ done < "$INFILE"
 # use awk to modify the output variable
 MODIFIED=$(echo -e "$OUTPUT" | awk '{print $1}' | awk '!seen[$0]++' | sort) # exclude molecules already seen, sort alphabetically
 
-FINAL=$(echo "$MODIFIED" | awk '{print "    - molecule-"$1}') # format as yaml list entries
+FINAL=$(echo "$MODIFIED" | awk '{print "    - molecule-"$1}') # format as yaml list entries, user will need to change molecule to the relevant molecule type
 
 # append to file
 echo "$FINAL" >> atbrepo.yaml
