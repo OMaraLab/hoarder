@@ -1,0 +1,68 @@
+title: "Complex neuronal membrane with 10% ring-oxidised cholesterol {replicate 3 of 3}"
+notes: "A coarse-grained simulation of a complex neuronal membrane containing ~50 different lipid species. Cholesterol has been replaced with ring-oxidised cholesterol to yield 10 mol% ring-OHC. This replicate was simulated for 20 µs with a 25 fs timestep, using Gromacs 2019.4. This system relates to the publication 'Site of Cholesterol Oxidation Impacts Its Localization and Domain Formation in the Neuronal Plasma Membrane', by Katie A. Wilson, Lily Wang, and Megan L. O’Mara, doi 10.1021/acschemneuro.1c00395  {replicate 3 of 3}"
+program: GROMACS
+organization: omara
+tags:
+    - replicate-3 of 3
+    - forcefield-Martini 2.2P
+    - membrane-complex neuronal
+    - membrane-oxidised complex neuronal
+    - lipid-CHOL
+    - lipid-OCLR
+    - lipid-POPC
+    - lipid-DPSM
+    - lipid-DPPC
+    - lipid-PUPE
+    - lipid-DPGS
+    - lipid-PAPC
+    - lipid-PAPE
+    - lipid-DOPC
+    - lipid-PUPC
+    - lipid-POPE
+    - lipid-PNSM
+    - lipid-PBSM
+    - lipid-PNGS
+    - lipid-DPG1
+    - lipid-DPG3
+    - lipid-DBGS
+    - lipid-OAPE
+    - lipid-OUPE
+    - lipid-POSM
+    - lipid-PFPC
+    - lipid-OIPC
+    - lipid-POGS
+    - lipid-OUPC
+    - lipid-DPCE
+    - lipid-PADG
+    - lipid-DBG1
+    - lipid-PNG1
+    - lipid-DBG3
+    - lipid-PNG3
+    - lipid-PPC
+    - lipid-OIPE
+    - lipid-POG1
+    - lipid-POG3
+    - lipid-DBCE
+    - lipid-PNCE
+    - lipid-IPC
+    - lipid-PPE
+    - lipid-IPE
+    - lipid-PODG
+    - lipid-PUPS
+    - lipid-PAPS
+    - lipid-POPS
+    - lipid-PUPI
+    - lipid-POPI
+    - lipid-PAPI
+    - lipid-OUPS
+    - lipid-DPPS
+    - lipid-PIPI
+    - lipid-PAPA
+    - lipid-PAP1
+    - lipid-PAP2
+    - lipid-PAP3
+    - lipid-POP1
+    - lipid-POP2
+    - lipid-POP3
+    - lipid-POPA
+    - solvent-PW
