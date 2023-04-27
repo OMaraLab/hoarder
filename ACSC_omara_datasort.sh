@@ -219,14 +219,13 @@ program: GROMACS
 organization: omara
 tags:
     - replicate-[number] of [total number]
+    - forcefield-[forcefield name and version]
+    - membrane-[type of membrane]
     - protein-[name of protein]
     - peptide-[name of peptide]
     - lipid-[name of lipid]
-    - membrane-[type of membrane]
     - PDB-[pdb code]
     - solvent-[name of solvent eg SPC, TIP3, PW]
-    - forcefield-[forcefield name and version]
-DUMMY LINE: This meaningless line will make this dataset fail validation.  Remove this line when you are finished editing
 EOF
 
 # if [ "$multistep" = false ]; then
@@ -288,6 +287,40 @@ EOF
     # copy topology file
     mkdir ${output_path}/${output_sysname}/topology -p
     cp ${input_path}/${input_sysname}.top ${output_path}/${output_sysname}/topology/${output_sysname}_topology_00001.top
+
+    # parse the log file to generate a molecule tag for every molecule
+    INFILE=${output_path}/${output_sysname}/topology/${output_sysname}_topology_00001.top
+    OUTPUT=""
+
+    while read line 
+    do 
+        if [[ $line == "[ molecules ]" ]]
+        then # find every line afterwards that includes a single unbroken string of characters, followed by whitespace of undetermined nonzero length, and then a number 
+            while read line 
+            do 
+                if [[ $line != "\;*" ]] 
+                    then 
+                    if [[ $line =~ ^([^[:blank:]]+)[[:blank:]]+([[:digit:]]+)  && ${BASH_REMATCH[2]} != "0" ]] 
+                        then
+                        OUTPUT="$OUTPUT${BASH_REMATCH[1]} ${BASH_REMATCH[2]}\n" # save all these lines to the variable
+                    fi 
+                fi 
+            done < "$INFILE" 
+        fi 
+    done < "$INFILE"
+
+    # use awk to modify the output variable, excluding all diplicates or molecules that are present zero times
+    MODIFIED=$(echo -e "$OUTPUT" | awk '{print $1}' | awk '!seen[$0]++')
+
+    # process these into tags
+    FINAL=$(echo "$MODIFIED" | awk '{print "molecule-"$1}')
+
+    # append molecule tag lines to file
+    echo "$FINAL" >> ${output_path}/${output_sysname}/atbrepo.yaml
+    echo "DUMMY LINE: This meaningless line will make this dataset fail validation.  Remove this line when you are finished editing" >> ${output_path}/${output_sysname}/atbrepo.yaml
+
+
+    # copy trajectory data
 
     mkdir ${output_path}/${output_sysname}/trajectory -p # folder is required regardless of whether trajectories are included
     # copy trajectories unless --notrj was specified
