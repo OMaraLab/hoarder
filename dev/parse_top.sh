@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#scan the file system.top
+#scan the file $1, should be a topology file
 INFILE=$1
 OUTPUT=""
 
