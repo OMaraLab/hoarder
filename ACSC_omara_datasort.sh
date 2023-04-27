@@ -24,7 +24,7 @@ useage() {
   echo "                           our Neuronal OxChol paper doi.org/10.1021/acschemneuro.1c00395"
   echo "                           would have the name: OMara_NeuronalOxChol-2021_ringOHC_r1"
   echo ""
-  echo "  -q or --output_path    : Place to save output. Default is current working directory."
+  echo "  -q or --output_path    : place to save output. Default is current working directory."
   echo ""
   echo "  -f or --ff_path        : path to the folder containing the majority of .itp files. Required."
   echo "                           needs to be different to --input_path otherwise it will copy your entire system"
