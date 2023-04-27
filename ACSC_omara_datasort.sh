@@ -221,11 +221,11 @@ tags:
     - replicate-[number] of [total number]
     - forcefield-[forcefield name and version]
     - membrane-[type of membrane]
-    - protein-[name of protein]
-    - peptide-[name of peptide]
-    - lipid-[name of lipid]
     - PDB-[pdb code]
-    - solvent-[name of solvent eg SPC, TIP3, PW]
+    - protein-[example name of protein]
+    - peptide-[example name of peptide]
+    - lipid-[example name of lipid]
+THE NEXT LINES ARE TAGS FOR EVERY MOLECULE IN THE SYSTEM.  CHANGE THEM from molecule-MOLNAME to whatever type of molecule they are, eg "lipid-POPC" or "solvent-PW" or "protein-GlyT2".  Remove this line when complete, and the example molecule tags above
 EOF
 
 # if [ "$multistep" = false ]; then
@@ -313,18 +313,17 @@ EOF
     MODIFIED=$(echo -e "$OUTPUT" | awk '{print $1}' | awk '!seen[$0]++')
 
     # process these into tags
-    FINAL=$(echo "$MODIFIED" | awk '{print "molecule-"$1}')
+    FINAL=$(echo "$MODIFIED" | awk '{print "    - molecule-"$1}')
 
     # append molecule tag lines to file
     echo "$FINAL" >> ${output_path}/${output_sysname}/atbrepo.yaml
-    echo "DUMMY LINE: This meaningless line will make this dataset fail validation.  Remove this line when you are finished editing" >> ${output_path}/${output_sysname}/atbrepo.yaml
 
 
     # copy trajectory data
 
     mkdir ${output_path}/${output_sysname}/trajectory -p # folder is required regardless of whether trajectories are included
     # copy trajectories unless --notrj was specified
-    if [ "$notrj" = false ]; then
+    if [ "$notrj" == false ]; then
         files=false
         if [ -f "${input_path}/${input_sysname}.xtc" ]; then 
             echo "copying trajectory file ${input_path}/${input_sysname}.xtc"
@@ -339,7 +338,7 @@ EOF
             rsync --progress ${input_path}/${input_sysname}.trr ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.trr # use rsync for a progress bar and for data fidelity; trajectories are big
             files=true
         fi
-        if [ $files=false ]; then
+        if [ $files == false ]; then
             "ALERT: no trajectory files were found with file names ${input_path}/${input_sysname}.(xtc|trr)"
         fi
     else
