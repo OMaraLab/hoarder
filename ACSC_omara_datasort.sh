@@ -338,14 +338,12 @@ EOF
             rsync --progress ${input_path}/${input_sysname}.trr ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.trr # use rsync for a progress bar and for data fidelity; trajectories are big
             files=true
         fi
-        if [ $files == false ]; then
-            "ALERT: no trajectory files were found with file names ${input_path}/${input_sysname}.(xtc|trr)"
-        fi
-    else
+        if [ $files == false ]; then    echo "DUMMY LINE: This meaningless line will make this dataset fail validation.  Remove this line when you are finished editing" >> ${output_path}/${output_sysname}/atbrepo.yaml
         echo "--notrj specified, trajectories not copied"
     fi
 
 
 
 echo ""
-echo "copying complete.  You will need to edit ${output_path}/${output_sysname}/atbrepo.yaml with information relevant to your system."
+echo "copying complete."
+echo "You will need to edit ${output_path}/${output_sysname}/atbrepo.yaml with information relevant to your system."
