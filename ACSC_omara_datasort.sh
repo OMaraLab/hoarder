@@ -213,8 +213,8 @@ fi
 mkdir ${output_path}/${output_sysname} -p
 
 cat <<EOF > ${output_path}/${output_sysname}/atbrepo.yaml
-title: "This will appear as the title of the simulation on the ACSC website. Should be enclosed in quotation marks."
-notes: "This will appear as a description of the simulation on the ACSC website. Should be enclosed in quotation marks.  If the data is related to a publication, the DOI of the publication can also be included in this field."
+title: "This will appear as the title of the simulation on the ACSC website. Should be enclosed in quotation marks. {replicate X of Y}"
+notes: "This will appear as a description of the simulation on the ACSC website. Should be enclosed in quotation marks.  If the data is related to a publication, the DOI of the publication can also be included in this field. {replicate X of Y}"
 program: GROMACS
 organization: omara
 tags:
@@ -224,8 +224,9 @@ tags:
     - lipid-[name of lipid]
     - membrane-[type of membrane]
     - PDB-[pdb code]
-    - solvent-[name of solvent]
-remove this like when you are finished editing
+    - solvent-[name of solvent eg SPC, TIP3, PW]
+    - forcefield-[forcefield name and version]
+DUMMY LINE: This meaningless line will make this dataset fail validation.  Remove this line when you are finished editing
 EOF
 
 # if [ "$multistep" = false ]; then
