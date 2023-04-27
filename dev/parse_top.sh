@@ -10,9 +10,9 @@ do
     then # find every line afterwards that includes a single unbroken string of characters, followed by whitespace of undetermined nonzero length, and then a number 
         while read line 
         do 
-            if [[ $line != "\;*" ]] 
+            if [[ $line != "\;*" ]] # skip lines that are commented out
                 then 
-                if [[ $line =~ ^([^[:blank:]]+)[[:blank:]]+([[:digit:]]+)  && ${BASH_REMATCH[2]} != "0" ]] 
+                if [[ $line =~ ^([^[:blank:]]+)[[:blank:]]+([[:digit:]]+)  && ${BASH_REMATCH[2]} != "0" ]]  # match molecule name and number where number is non zero
                     then
                     OUTPUT="$OUTPUT${BASH_REMATCH[1]} ${BASH_REMATCH[2]}\n" # save all these lines to the variable
                 fi 
@@ -22,9 +22,9 @@ do
 done < "$INFILE"
 
 # use awk to modify the output variable
-MODIFIED=$(echo -e "$OUTPUT" | awk '{print $1}' | awk '!seen[$0]++' | sort)
+MODIFIED=$(echo -e "$OUTPUT" | awk '{print $1}' | awk '!seen[$0]++' | sort) # exclude molecules already seen, sort alphabetically
 
-FINAL=$(echo "$MODIFIED" | awk '{print "molecule-"$1}')
+FINAL=$(echo "$MODIFIED" | awk '{print "    - molecule-"$1}') # format as yaml list entries
 
 # append to file
 echo "$FINAL" >> atbrepo.yaml
