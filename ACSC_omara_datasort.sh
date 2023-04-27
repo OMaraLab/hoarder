@@ -30,7 +30,7 @@ useage() {
   echo "                           needs to be different to --input_path otherwise it will copy your entire system"
   echo "                           into the forcefield-files folder."
   echo ""
-  echo "  -r or --rep            : replicate number.  Doesn't do anything right now. Optional."
+  echo "  -r or --rep            : replicate number. Changes replicate number in atbrepo.yaml metadata file. Optional."
   echo ""
   echo "  -x or --extra_itp      : path to an additional .itp file from outside --ff_path. Optional."
   echo "                           Can be repeated multiple times."
@@ -213,12 +213,12 @@ fi
 mkdir ${output_path}/${output_sysname} -p
 
 cat <<EOF > ${output_path}/${output_sysname}/atbrepo.yaml
-title: "This will appear as the title of the simulation on the ACSC website. Should be enclosed in quotation marks. {replicate X of Y}"
-notes: "This will appear as a description of the simulation on the ACSC website. Should be enclosed in quotation marks.  If the data is related to a publication, the DOI of the publication can also be included in this field. {replicate X of Y}"
+title: "This will appear as the title of the simulation on the ACSC website. Should be enclosed in quotation marks. {replicate TKTKTK of 3}"
+notes: "This will appear as a description of the simulation on the ACSC website. Should be enclosed in quotation marks.  If the data is related to a publication, the DOI of the publication can also be included in this field. {replicate TKTKTK of 3}"
 program: GROMACS
 organization: omara
 tags:
-    - replicate-[number] of [total number]
+    - replicate-TKTKTK of [total number]
     - forcefield-[forcefield name and version]
     - membrane-[type of membrane]
     - PDB-[pdb code]
@@ -227,6 +227,10 @@ tags:
     - lipid-[example name of lipid]
 THE NEXT LINES ARE TAGS FOR EVERY MOLECULE IN THE SYSTEM.  CHANGE THEM from molecule-MOLNAME to whatever type of molecule they are, eg "lipid-POPC" or "solvent-PW" or "protein-GlyT2".  Remove this line when complete, and the example molecule tags above
 EOF
+
+if [ -n "$rep" ]; then # if rep defined, find and replace placeholder with rep number
+  sed -i 's/TKTKTK/'"$rep"'/g' ${output_path}/${output_sysname}/atbrepo.yaml
+fi
 
 # if [ "$multistep" = false ]; then
 
