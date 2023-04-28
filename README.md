@@ -50,7 +50,7 @@ $ ./hoarder.sh -i System_Name -p path/to/production_system/rep1              ;
     --extra_itp path/to/Extra_itp_file_2.itp 
 ~~~
 
-This would archive the simulation replicate found in the folder `path/to/production_system/rep1`, by looking for system files that match the simulation structure described above.
+This would archive the simulation replicate found in the folder `path/to/production_system/rep1`, by looking for system files that match the simulation structure described above.  It would copy the system as a restructured dataset in the directory `path/to/outputdataset/Output_SystemName`
 
 ### Important options
 
@@ -60,9 +60,9 @@ This would archive the simulation replicate found in the folder `path/to/product
 
 ## Naming your system
 
-Every datasets on the ACSC needs to have a unique system name, not shared with any other repository from any other research group.  To accieve this, our group convention for output system names is: `Omara_[ProjectName]_[ProectYear]_[SystemName]_r[ReplicateNumber]`
+Every datasets on the ACSC needs to have a unique system name, not shared with any other repository from any other research group.  To accieve this, our group convention for output system names is: `OMara_[ProjectName]_[ProjectYear]_[SystemName]_r[ReplicateNumber]`
 
-So for example, replicate 2 of a system containing tail-oxidised cholesterol from [this paper](http://doi.org/10.1021/acschemneuro.1c00395) might be called `Omara_OxidisedNeuronal_2021_tailOHC_r2`
+So for example, replicate 2 of a system containing tail-oxidised cholesterol from [this paper](http://doi.org/10.1021/acschemneuro.1c00395) might be called `OMara_OxidisedNeuronal_2021_tailOHC_r2`
 
 ## Generating metadata
 
