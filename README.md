@@ -56,7 +56,7 @@ This would archive the simulation replicate found in the folder `path/to/product
 
 * `-h` : print the help
 * `--dry-run` : test whether the files and paths specified in your command are valid, and whether any required flags are missing, then exit without doing anything.
-* `--notrj` : restrucgture the dataset as normal but do not copy any trajectory data
+* `--notrj` : copy and restructure the dataset as normal but do not copy any trajectory data
 
 ## Naming your system
 
