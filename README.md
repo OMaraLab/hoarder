@@ -46,7 +46,7 @@ Note that each simulation replicate needs to be handled as a separate system.
 
 A typical command might look like this:
 
-~~~s
+~~~bash
 $ ./hoarder.sh -i System_Name -p path/to/production_system/rep1                ;
     -o Output_SystemName -q path/to/outputdataset/  --rep 1 --reps 3           ;
     -f path/to/forcefield_folder.ff --extra_itp path/to/Extra_itp_file_1.itp   ;
