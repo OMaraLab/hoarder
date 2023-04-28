@@ -22,7 +22,7 @@ do
 done < "$INFILE"
 
 # use awk to modify the output variable
-MODIFIED=$(echo -e "$OUTPUT" | awk '{print $1}' | awk '!seen[$0]++' | sort) # exclude molecules already seen, sort alphabetically
+MODIFIED=$(echo -e "$OUTPUT" | awk '{print $1}' | awk '!seen[$0]++' ) # exclude molecules already seen
 
 FINAL=$(echo "$MODIFIED" | awk '{print "    - molecule-"$1}') # format as yaml list entries, user will need to change molecule to the relevant molecule type
 
