@@ -233,8 +233,8 @@ tags:
     - solvent-Martini 2 PW
     - ion-Na+
     - ion-Sodium
-    - ion-Ca-
-    - ion-Calcium
+    - ion-Cl-
+    - ion-Chloride
 ~~~
 
 ## Metadata guidelines
