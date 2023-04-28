@@ -64,6 +64,25 @@ Once you are done, edit the metadata in `OutputSystemName/atbrepo.yaml` and insp
 * `--notrj` : copy and restructure the dataset as normal but do not copy any trajectory data
 * `--notrr` : copy and restructure the dataset as normal but do not copy any `.trr` trajectory files.  This is useful if your simulation includes a large, reduntant `.trr` file that you do not wish to archive.
 
+### What gets copied?
+
+* The control file `SystemName.mdp`
+* The log file `SystemName.log`
+* The index file `SystemName.ndx`
+* The topology file `SystemName.top`
+* An energy file `SystemName.edr`, if one is present
+* Initial and final coordinates
+* Trajectory `SystemName.trr` and `SystemName.xtc` files
+* Everything in the forcefield folder, and any `.itp` files specified with `--extra-itp`
+
+### What doesn't gets copied?
+
+* The binary file `SystemName.tpr`
+* The slurm or pbs submission script
+* The slurm or pbs submission output logfiles and errorfiles
+* The mdout.mdp log file
+* Anything else that wasn't listed above
+
 ## Naming your system
 
 Every datasets on the ACSC needs to have a unique system name, not shared with any other repository from any other research group.  To accieve this, our group convention for output system names is: `OMara_[ProjectName]_[ProjectYear]_[SystemName]_r[ReplicateNumber]`
