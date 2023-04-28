@@ -274,7 +274,7 @@ Some general guidelines about metadata are given below.  You may also wish to lo
 
 * You should also include other commonly used references to your protein, such as a uniprot id.  For human GlyT2, you would also include ` - protein-SLC6A5` and ` - uniprot-Q761U9`
 
-* If your protein structure came from the PDB, include a tag for the four letter pdb code.  for example, if your simulation used [this PDB structure of drosophila DAT](https://www.rcsb.org/structure/4m48) you would include the tag ` - pdb-4M48`.
+* If your protein structure came from the PDB, include a tag for the four letter pdb code.  for example, if your simulation used [this PDB structure of *Drosophila* DAT](https://www.rcsb.org/structure/4m48) you would include the tag ` - pdb-4M48`.
 
 * If your system includes solvent, uou should have a tag related to the specific solvent model used.  For example, if you used the SPC water model, you would change ` - molecule-SOL` to ` - solvent-SPC`.  If you used martini polarizable water, you might use ` - solvent-Martini 2 PW`.  If you used martini2 coarse grain water with antifreze, you might use ` - solvent-Martini 2 W` ` - solvent-Martini 2 WF`.  
 
