@@ -73,7 +73,7 @@ Once you are done, edit the metadata in `OutputSystemName/atbrepo.yaml` and insp
 * An energy file `SystemName.edr`, if one is present
 * Initial and final coordinates
 * Trajectory `SystemName.trr` and `SystemName.xtc` files
-* Everything in the forcefield folder, and any `.itp` files specified with `--extra-itp`
+* **Everything** in the forcefield folder, and any `.itp` files specified with `--extra-itp`
 
 ### What doesn't gets copied?
 
