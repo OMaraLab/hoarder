@@ -66,7 +66,7 @@ This would archive the simulation replicate found in the folder `path/to/product
 
 Every datasets on the ACSC needs to have a unique system name, not shared with any other repository from any other research group.  To accieve this, our group convention for output system names is: `OMara_[ProjectName]_[ProjectYear]_[SystemName]_r[ReplicateNumber]`
 
-So for example, replicate 2 of a system containing tail-oxidised cholesterol from [this paper](http://doi.org/10.1021/acschemneuro.1c00395) might be called `OMara_OxidisedNeuronal_2021_tailOHC_r2`
+So for example, replicate 2 of a system containing tail-oxidised cholesterol from [this paper](http://doi.org/10.1021/acschemneuro.1c00395) might be called `OMara_Neuronal-OxChol_2021_tailOHC_r2`
 
 ## Generating metadata
 
