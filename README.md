@@ -73,8 +73,11 @@ So for example, replicate 2 of a system containing tail-oxidised cholesterol fro
 `hoarder.sh` will attempt to generate metadata for you automatically in a file called `atbrepo.yaml`.  It will look something like this:
 
 ~~~yaml
-title: "This will appear as the title of the simulation on the ACSC website. Should be enclosed in quotation marks. {replicate TKTKTK of KTKTKT}"
-notes: "This will appear as a description of the simulation on the ACSC website. Should be enclosed in quotation marks.  If the data is related to a publication, the DOI of the publication can also be included in this field. {replicate TKTKTK of KTKTKT}"
+title: "This will appear as the title of the simulation on the ACSC website. Should be 
+enclosed in quotation marks. {replicate TKTKTK of KTKTKT}"
+notes: "This will appear as a description of the simulation on the ACSC website. Should be
+enclosed in quotation marks.  If the data is related to a publication, the DOI of the
+publication can also be included in this field. {replicate TKTKTK of KTKTKT}"
 program: GROMACS
 organization: omara
 tags:
@@ -85,7 +88,9 @@ tags:
     - protein-[example name of protein]
     - peptide-[example name of peptide]
     - lipid-[example name of lipid]
-THE NEXT LINES ARE TAGS FOR EVERY MOLECULE IN THE SYSTEM.  CHANGE THEM from molecule-MOLNAME to whatever type of molecule they are, eg "lipid-POPC" or "solvent-PW" or "protein-GlyT2".  Remove this line when complete, and the example molecule tags above
+THE NEXT LINES ARE TAGS FOR EVERY MOLECULE IN THE SYSTEM.  CHANGE THEM from molecule-MOLNAME to
+whatever type of molecule they are, eg "lipid-POPC" or "solvent-PW" or "protein-GlyT2".  Remove
+this line when complete, and the example molecule tags above
     - molecule-Protein_Chain_A
     - molecule-CHOL
     - molecule-OCLR
@@ -155,8 +160,15 @@ You will need to manually edit this to provide a dataset title, some human reada
 This is what that metadata file might look like after you finish editing it.  There is now an  informative title, a brief but detailed description of the simulation including the DOI of the relevant publication, notes specifying the simulation software used (Gromacs) and the group that owns the dataset (the O'Mara group), and metadata tags describing the simulation paramaters and listing relevant molecules.
 
 ~~~yaml
-title: "GlyT2 embedded in a complex neuronal membrane with 10 mol% ring-oxidised cholesterol {replicate 3 of 3}"
-notes: "A coarse-grained simulation of GlyT2 embedded in a complex neuronal membrane containing ~50 different lipid species. Cholesterol has been replaced with ring-oxidised cholesterol to  final concentration of 10 mol% ring-OHC. This replicate was simulated for 20 µs with a 25 fs timestep, using Gromacs 2019.4. This system relates to the publication 'Site of Cholesterol Oxidation Impacts Its Localization and Domain Formation in the Neuronal Plasma Membrane', by Katie A. Wilson, Lily Wang, and Megan L. O’Mara, doi 10.1021/acschemneuro.1c00395  {replicate 3 of 3}"
+title: "GlyT2 embedded in a complex neuronal membrane with 10 mol% ring-oxidised cholesterol
+{replicate 3 of 3}"
+notes: "A coarse-grained simulation of GlyT2 embedded in a complex neuronal membrane containing
+~50 different lipid species. Cholesterol has been replaced with ring-oxidised cholesterol to 
+final concentration of 10 mol% ring-OHC. This replicate was simulated for 20 µs with a 25 fs
+timestep, using Gromacs 2019.4. This system relates to the publication 'Site of Cholesterol
+Oxidation Impacts Its Localization and Domain Formation in the Neuronal Plasma Membrane', by
+Katie A. Wilson, Lily Wang, and Megan L. O’Mara, doi 10.1021/acschemneuro.1c00395  {replicate 3
+of 3}"
 program: GROMACS
 organization: omara
 tags:
