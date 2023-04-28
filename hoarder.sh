@@ -1,7 +1,7 @@
 #!/bin/bash
 echo ""
 
-useage() {
+usage() {
 
   echo ""
   echo "hoarder: Helpful OMara to ACSC Repository Dataset Efficient Reshaper"
@@ -119,7 +119,7 @@ while true; do
       shift
       ;;
     -h|--help)
-      useage
+      usage
       exit 0
       ;;
     --)
