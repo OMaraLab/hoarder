@@ -10,6 +10,7 @@ Hoarder assumes your production simulation looks something like this:
 └──System_Name
     ├── Forcefield.ff                # location of this folder varies from system to system
     |   └──Various itp files         # forcefield parameter files
+    |
     ├── run1                         # folder for a simulation replicate
     |   ├──System_Name               # a submission script for SLURM or PBS
     |   ├──System_Name_start.gro     # input coordinates
@@ -24,8 +25,10 @@ Hoarder assumes your production simulation looks something like this:
     |   ├──System_Name.xtc           # compressed trajectory file
     |   ├──Extra_itp_file_1.itp      # extra forcefield parameter files that were stored 
     |   └──Extra_itp_file_2.itp         outside the forcefield folder (optional)
+    |
     ├── run2                         # folder for a second simulation replicate
     |   └──Similar contents to run1
+    |
     └── run3                         # folder for a third simulation replicate
         └──Similar contents to run1 and run2
 ~~~
