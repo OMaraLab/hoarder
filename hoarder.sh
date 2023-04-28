@@ -244,9 +244,9 @@ EOF
 if [ -n "$rep" ]; then # if --rep defined, find and replace placeholder with rep number
   sed -i 's/TKTKTK/'"$rep"'/g' ${output_path}/${output_sysname}/atbrepo.yaml
 fi
+
 if [ -n "$reps" ]; then # if --reps defined, replace placeholder with total rep number
   sed -i 's/KTKTKT/'"$reps"'/g' ${output_path}/${output_sysname}/atbrepo.yaml
-
 fi
 
 # if [ "$multistep" = false ]; then
@@ -370,4 +370,7 @@ fi
 
 
 echo ""
-echo "copying complete.  You will need to edit ${output_path}/${output_sysname}/atbrepo.yaml with information relevant to your system."
+echo "Copying complete."
+echo "You will need to edit ${output_sysname}/atbrepo.yaml with information relevant to your system."
+echo "Please also check the contents of ${output_sysname}/topology for unecessary leftover files."
+echo "Thanks for hoarding!"
