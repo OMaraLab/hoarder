@@ -1,6 +1,6 @@
-# HOARDER.sh: a Helpful OMara to ACSC-Repository Dataset Export Reshaper
+# hoarder.sh: a Helpful OMara to ACSC-Repository Dataset Export Reshaper
 
-`Hoarder.sh` is a script to automatically reshape a molecular dynamics simulation from a typical OMara group directory structure into a directory structure suitible for the [Australasian Computational Simulation Commons](https://molecular-dynamics.atb.uq.edu.au).  After a dataset is processed with HOARDER, it should be validated and archived with [CSC tools](https://atb-uq.github.io/csc-tools/), and submitted to the repository.
+`hoarder.sh` is a script to automatically reshape a molecular dynamics simulation from a typical O'Mara group directory structure into a directory structure suitable for publishing on the [Australasian Computational Simulation Commons](https://molecular-dynamics.atb.uq.edu.au).  After a dataset is processed with Hoarder it should be validated and archived with [CSC tools](https://atb-uq.github.io/csc-tools/), and submitted to the repository.
 
 ## Intended workflow
 
