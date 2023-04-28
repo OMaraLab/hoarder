@@ -241,7 +241,7 @@ tags:
 
 ### Metadata title
 
-This should be a short, human-readable title, that informs the user what the simulation was about.  It should end with the replicate number in the format `{replicate X of Y}`.
+This should be a short, human-readable title, that informs the user what the simulation was about.  With the exception of the replicate number, it should be consistent between every simulation replicate of your system.  It should end with the replicate number in the format `{replicate X of Y}`.
 
 ### Metadata notes
 
@@ -282,7 +282,7 @@ Some general guidelines about metadata are given below.  You may also wish to lo
 
 * If your protein structure came from the PDB, include a tag for the four letter pdb code.  for example, if your simulation used [this PDB structure of *Drosophila* DAT](https://www.rcsb.org/structure/4m48) you would include the tag `- pdb-4M48`.
 
-* If your system includes solvent, uou should have a tag related to the specific solvent model used.  For example, if you used the SPC water model, you would change `- molecule-SOL` to `- solvent-SPC`.  If you used martini polarizable water, you might use `- solvent-Martini 2 PW`.  If you used martini2 coarse grain water with antifreze, you might use `- solvent-Martini 2 W` `- solvent-Martini 2 WF`.  
+* If your system includes solvent, you should have a tag related to the specific solvent model used.  For example, if you used the SPC water model, you would change `- molecule-SOL` to `- solvent-SPC`.  If you used martini polarizable water, you might use `- solvent-Martini 2 PW`.  If you used martini2 coarse grain water with antifreze, you might use `- solvent-Martini 2 W` `- solvent-Martini 2 WF`.  
 
 * A tag related to an ion should be changed to `- ion-ionname`.  For example, divalent calcium would change from `- molecule-Ca` to both `- ion-Ca2+` and `- ion-calcium`
 
