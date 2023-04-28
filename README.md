@@ -82,7 +82,7 @@ Once you are done, edit the metadata in `OutputSystemName/atbrepo.yaml` and insp
 * The slurm or pbs submission script
 * The slurm or pbs submission output logfiles and errorfiles
 * The `mdout.mdp` log file
-* Any `.itp` file outside of `--ff_path` and not specified with `--extra-itp`
+* Any `.itp` file outside of `--ff_path` that was not specified with `--extra-itp`
 * Anything else that wasn't listed above
 
 ## Naming your system
