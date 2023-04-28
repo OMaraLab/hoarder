@@ -288,9 +288,9 @@ Some general guidelines about metadata are given below.  You may also wish to lo
 
 * A tag related to a lipid should be changed to `- lipid-lipidcode`.  For example, `- molecule-POPC` should become `- lipid-POPC`
 
-* A tag related to a peptide should be chaned to `- peptide-peptidename`
+* A tag related to a peptide should be changed to `- peptide-peptidename`
 
-* A tag related to a polymer should be chaned to `- polymer-polymername`
+* A tag related to a polymer should be changed to `- polymer-polymername`
 
 * A tag for a molecule that doesn't fit into one of these categories, such as a small molecule inhibitor compound, should remain as `- molecule-RESNAME`.  Again, you may wish to include relevant common name(s) if any exist.
 
