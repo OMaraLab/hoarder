@@ -245,7 +245,7 @@ This should be a short, human-readable title, that informs the user what the sim
 
 ### Metadata notes
 
-This should be a short human readable description the system.  If the simulation was published, this should include the DOI of the relevant paper.  this should be only a brief summary of what the simulation system is; don't include exessive detail as this is present in the paper.  It should also end with the replicate number in the format {replicate X of Y}.
+This should be a short human readable description the system.  If the simulation was published, this should include the DOI of the relevant paper.  this should be only a brief summary of what the simulation system is; don't include exessive detail as this is present in the paper.  It should also end with the replicate number in the format `{replicate X of Y}`.
 
 ### Metadata tags
 
