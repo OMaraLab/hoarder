@@ -55,6 +55,8 @@ $ ./hoarder.sh -i System_Name -p path/to/production_system/rep1                ;
 
 This would archive the simulation replicate found in the folder `path/to/production_system/rep1`, by looking for system files that match the simulation structure described above.  It would copy the system as a restructured dataset in the directory `path/to/outputdataset/Output_SystemName`
 
+Once you are done, edit the metadata in `OutputSystemName/atbrepo.yaml` and inspect the new directory structure.  Pay particular attention to the `OutputSystemName/forcefield-files/` folder, and remove any files that should not be archived, like python scripts or unusued `.itp` files.
+
 ### Important options
 
 * `-h` : print the help
