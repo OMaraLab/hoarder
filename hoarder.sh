@@ -45,6 +45,8 @@ useage() {
   echo ""
   echo "  --notrj                : copy all simulation data except trajectory files. Optional."  
   echo ""
+  echo "  --notrr                : do not copy .trr trajectory files. Optional."  
+  echo ""
   echo "  -h                     : print this message then exit."  
   echo ""
   exit 0
@@ -56,11 +58,12 @@ working=$(pwd)
 extra_itp=()
 dry_run=false
 notrj=false
+notrr=false
 output_path="./"
 multistep=false
 
 # Parse command line arguments
-ARGS=$(getopt -o hi:p:o:q:f::x: --long help,input_sysname:,input_path:,output_sysname:,ff_path:,rep:,reps:,extra_itp:,dry-run,notrj,multistep -- "$@")
+ARGS=$(getopt -o hi:p:o:q:f::x: --long help,input_sysname:,input_path:,output_sysname:,ff_path:,rep:,reps:,extra_itp:,dry-run,notrj,notrr,multistep -- "$@")
 
 eval set -- "$ARGS"
 
@@ -109,6 +112,10 @@ while true; do
       ;;
     --notrj)
       notrj=true
+      shift
+      ;;
+    --notrr)
+      notrr=true
       shift
       ;;
     -h|--help)
@@ -176,6 +183,8 @@ echo "Input filepath: $input_path"
 echo "Output sysname: $output_sysname"
 echo "Output filepath: $output_path"
 echo "--notrj:" $notrj 
+echo "--notrr:" $notrr 
+
 if [ -n "$rep" ]; then
   echo "This replicate: $rep"
 fi
@@ -193,9 +202,9 @@ if [ "$dry_run" = true ]; then
 else
   echo "--dry-run:" $dry_run
 fi
-  echo "--multistep:" $multistep
-if [ "$multistep" = true ]; then
-  echo "Will look for all files distributed across multiple run steps" 
+#   echo "--multistep:" $multistep
+# if [ "$multistep" = true ]; then
+#   echo "Will look for all files distributed across multiple run steps" 
 
     # set up rename_files function for multistep runs
       rename_files() {
@@ -354,7 +363,7 @@ fi
           rsync --progress ${input_path}/${input_sysname}.xtc ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.xtc # use rsync for a progress bar and for data fidelity; trajectories are big
           files=true
       fi
-      if [ -f "${input_path}/${input_sysname}.trr" ]; then 
+      if [ -f "${input_path}/${input_sysname}.trr" ] && [ "$notrr" == false ]; then 
           echo "copying trajectory file ${input_path}/${input_sysname}.trr"
           echo "ALERT: MAKE SURE YOU ACTUALLY WANT THIS, .trr FILES ARE USUALLY ENOURMOUS"
           echo
