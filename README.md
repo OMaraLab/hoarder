@@ -38,7 +38,7 @@ A typical workflow would be:
 * **First**, use hoarder to restructure each simulation replicate.
 * **Second**, manually check the metadata and contents of the forcefield folders to ensure everything has been captured correctly, and remove anything that is not required.  This might include `.itp` files that were not used in the production simulation, or leftover python scripts and juptier notebooks left in the forcefield folder.
 * **Third**, use [csct](https://atb-uq.github.io/csc-tools/) to validate and archive each restructured simulation replicate
-* **Finally**, upload the archived datasets to the [Australasian Computational Simmulation Commons](https://molecular-dynamics.atb.uq.edu.au).
+* **Finally**, upload the archived datasets to the [Australasian Computational Simulation Commons](https://molecular-dynamics.atb.uq.edu.au).
 
 Note that each simulation replicate needs to be handled as a separate system.
 
