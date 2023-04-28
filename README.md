@@ -148,7 +148,7 @@ THE NEXT LINES ARE TAGS FOR EVERY MOLECULE IN THE SYSTEM.  CHANGE THEM from mole
 
 You will need to manually edit this to provide a dataset title, some human readable notes about your dataset, and metadata tags describing your simulation.
 
-This is what that metadata file might look like after you finish editing it.  There is now an  informative title, a brief but detailed description of the simulation including the DOI of the relevant publication, tags outlining the simulation software used (Gromacs) and the group that owns the dataset (the omara group), and metadata tags describing the simulation paramaters and listing relevant molecules.
+This is what that metadata file might look like after you finish editing it.  There is now an  informative title, a brief but detailed description of the simulation including the DOI of the relevant publication, notes specifying the simulation software used (Gromacs) and the group that owns the dataset (the O'Mara group), and metadata tags describing the simulation paramaters and listing relevant molecules.
 
 ~~~yaml
 title: "Complex neuronal membrane with 10% ring-oxidised cholesterol {replicate 3 of 3}"
