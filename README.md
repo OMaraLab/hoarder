@@ -22,8 +22,8 @@ Hoarder assumes your production simulation looks something like this:
     |   ├──System_Name.tpr           # gromacs binary input file
     |   ├──System_Name.trr           # very large trajectory file (optional)
     |   ├──System_Name.xtc           # compressed trajectory file
-    |   └──Extra_itp_file.itp        # extra forcefield parameter files that were stored 
-    |                                   outside the forcefield folder (optional)
+    |   ├──Extra_itp_file_1.itp      # extra forcefield parameter files that were stored 
+    |   └──Extra_itp_file_2.itp        outside the forcefield folder (optional)
     ├── run2                         # folder for a second simulation replicate
     |   └──Similar contents to run1
     └── run3                         # folder for a third simulation replicate
@@ -44,9 +44,10 @@ Note that each simulation replicate needs to be handled as a separate system.
 A typical command might look like this:
 
 ~~~s
-$ ./hoarder.sh -i System_Name -p path/to/production_system/rep1             ;
-    -o Output_SystemName -q path/to/outputdataset/  --rep 1 --reps 3        ;
-    -f path/to/forcefield_folder.ff --extra_itp path/to/Extra_itp-file.itp
+$ ./hoarder.sh -i System_Name -p path/to/production_system/rep1              ;
+    -o Output_SystemName -q path/to/outputdataset/  --rep 1 --reps 3         ;
+    -f path/to/forcefield_folder.ff --extra_itp path/to/Extra_itp_file_1.itp ;
+    --extra_itp path/to/Extra_itp_file_2.itp 
 ~~~
 
 This would archive the simulation replicate found in the folder `path/to/production_system/rep1`, by looking for system files that match the simulation structure described above.

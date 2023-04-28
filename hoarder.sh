@@ -249,123 +249,124 @@ if [ -n "$reps" ]; then # if --reps defined, replace placeholder with total rep 
   sed -i 's/KTKTKT/'"$reps"'/g' ${output_path}/${output_sysname}/atbrepo.yaml
 fi
 
-# if [ "$multistep" = false ]; then
+  # copying for normal runs; this should be most cases
 
-    # copying for normal runs; this should be most cases
+  # copy control files
 
-    # copy control files
+  mkdir ${output_path}/${output_sysname}/control -p
+  cp ${input_path}/${input_sysname}.mdp ${output_path}/${output_sysname}/control/${output_sysname}_control_00001.mdp
 
-    mkdir ${output_path}/${output_sysname}/control -p
-    cp ${input_path}/${input_sysname}.mdp ${output_path}/${output_sysname}/control/${output_sysname}_control_00001.mdp
+  if [ -f "${input_path}/${input_path}.ndx" ]; then       # for now I'm capturing the index files in the control directory, but sharif is going to chat to his team about how we want to handle these going forward
+    cp ${input_path}/${input_sysname}.ndx ${output_path}/${output_sysname}/control/${output_sysname}_control_00002.ndx
+  fi
+  # copy energy files if any exist
 
-    # copy energy files if any exist
+  mkdir ${output_path}/${output_sysname}/energy -p
+  if [ -f "${input_path}/${input_path}.edr" ]; then 
+      cp ${input_path}/${input_sysname}.edr ${output_path}/${output_sysname}/energy/${output_sysname}_energy_00001.edr
+  fi
 
-    mkdir ${output_path}/${output_sysname}/energy -p
-    if [ -f "${input_path}/${input_path}.edr" ]; then 
-        cp ${input_path}/${input_sysname}.edr ${output_path}/${output_sysname}/energy/${output_sysname}_energy_00001.edr
-    fi
+  # copy final coordinates if any exist
+  mkdir ${output_path}/${output_sysname}/final-coordinates -p
+  if [ -f "${input_path}/${input_sysname}.gro" ]; then 
+      cp ${input_path}/${input_sysname}.gro ${output_path}/${output_sysname}/final-coordinates/${output_sysname}_final-coordinates_00001.gro
+  fi
 
-    # copy final coordinates if any exist
-    mkdir ${output_path}/${output_sysname}/final-coordinates -p
-    if [ -f "${input_path}/${input_sysname}.gro" ]; then 
-        cp ${input_path}/${input_sysname}.gro ${output_path}/${output_sysname}/final-coordinates/${output_sysname}_final-coordinates_00001.gro
-    fi
+  # copy input coordinates if any exist
+  mkdir ${output_path}/${output_sysname}/input-coordinates -p
+  if [ -f "${input_path}/${input_sysname}_start.gro" ]; then 
+      cp ${input_path}/${input_sysname}_start.gro ${output_path}/${output_sysname}/input-coordinates/${output_sysname}_input-coordinates_00001.gro
+  fi
 
-    # copy input coordinates if any exist
-    mkdir ${output_path}/${output_sysname}/input-coordinates -p
-    if [ -f "${input_path}/${input_sysname}_start.gro" ]; then 
-        cp ${input_path}/${input_sysname}_start.gro ${output_path}/${output_sysname}/input-coordinates/${output_sysname}_input-coordinates_00001.gro
-    fi
+  # copy forcefield files itp files etc)
+  mkdir ${output_path}/${output_sysname}/forcefield-files -p
+  cp ${ff_path}/* ${output_path}/${output_sysname}/forcefield-files/
 
-    # copy forcefield files itp files etc)
-    mkdir ${output_path}/${output_sysname}/forcefield-files -p
-    cp ${ff_path}/* ${output_path}/${output_sysname}/forcefield-files/
+  # grab extra itp files if any were specified, like the protein.itp you get from go_martinize, add them to the forcefield files
+  if [ ${#extra_itp[@]} -gt 0 ]; then
+    for itp in ${extra_itp[@]}; do
+      fname=$(basename "$itp")
+      if test -e "${output_path}/${output_sysname}/forcefield-files/${fname}"
+      then
+        echo "ERROR: You have specified --extra_itp ${itp} , however a file with the name ${fname} already exists in ${output_path}/${output_sysname}/forcefield-files/"
+        echo "Please fix this and run your command again"
+        exit 1
+      fi
+      cp $itp  ${output_path}/${output_sysname}/forcefield-files/
+    done
+  fi
 
-    # grab extra itp files if any were specified, like the protein.itp you get from go_martinize, add them to the forcefield files
-    if [ ${#extra_itp[@]} -gt 0 ]; then
-      for itp in ${extra_itp[@]}; do
-        fname=$(basename "$itp")
-        if test -e "${output_path}/${output_sysname}/forcefield-files/${fname}"
-        then
-          echo "ERROR: You have specified --extra_itp ${itp} , however a file with the name ${fname} already exists in ${output_path}/${output_sysname}/forcefield-files/"
-          echo "Please fix this and run your command again"
-          exit 1
-        fi
-        cp $itp  ${output_path}/${output_sysname}/forcefield-files/
-      done
-    fi
+  # copy log file if it exists
+  mkdir ${output_path}/${output_sysname}/log -p
+  if [ -f "${input_path}/${input_sysname}.log" ]; then 
+      cp ${input_path}/${input_sysname}.log ${output_path}/${output_sysname}/log/${output_sysname}_log_00001.log
+  fi
 
-    # copy log file if it exists
-    mkdir ${output_path}/${output_sysname}/log -p
-    if [ -f "${input_path}/${input_sysname}.log" ]; then 
-        cp ${input_path}/${input_sysname}.log ${output_path}/${output_sysname}/log/${output_sysname}_log_00001.log
-    fi
+  # make a reference coordinates folder (required)
+  # user will have to add any reference coordinates manually for now
+  mkdir ${output_path}/${output_sysname}/reference-coordinates -p
 
-    # make a reference coordinates folder (required)
-    # user will have to add any reference coordinates manually for now
-    mkdir ${output_path}/${output_sysname}/reference-coordinates -p
+  # copy topology file
+  mkdir ${output_path}/${output_sysname}/topology -p
+  cp ${input_path}/${input_sysname}.top ${output_path}/${output_sysname}/topology/${output_sysname}_topology_00001.top
 
-    # copy topology file
-    mkdir ${output_path}/${output_sysname}/topology -p
-    cp ${input_path}/${input_sysname}.top ${output_path}/${output_sysname}/topology/${output_sysname}_topology_00001.top
+  # parse the log file to generate a molecule tag for every molecule
+  INFILE=${output_path}/${output_sysname}/topology/${output_sysname}_topology_00001.top
+  OUTPUT=""
 
-    # parse the log file to generate a molecule tag for every molecule
-    INFILE=${output_path}/${output_sysname}/topology/${output_sysname}_topology_00001.top
-    OUTPUT=""
+  while read line 
+  do 
+      if [[ $line == "[ molecules ]" ]]
+      then # find every line afterwards that includes a single unbroken string of characters, followed by whitespace of undetermined nonzero length, and then a number 
+          while read line 
+          do 
+              if [[ $line != "\;*" ]] 
+                  then 
+                  if [[ $line =~ ^([^[:blank:]]+)[[:blank:]]+([[:digit:]]+)  && ${BASH_REMATCH[2]} != "0" ]] 
+                      then
+                      OUTPUT="$OUTPUT${BASH_REMATCH[1]} ${BASH_REMATCH[2]}\n" # save all these lines to the variable
+                  fi 
+              fi 
+          done < "$INFILE" 
+      fi 
+  done < "$INFILE"
 
-    while read line 
-    do 
-        if [[ $line == "[ molecules ]" ]]
-        then # find every line afterwards that includes a single unbroken string of characters, followed by whitespace of undetermined nonzero length, and then a number 
-            while read line 
-            do 
-                if [[ $line != "\;*" ]] 
-                    then 
-                    if [[ $line =~ ^([^[:blank:]]+)[[:blank:]]+([[:digit:]]+)  && ${BASH_REMATCH[2]} != "0" ]] 
-                        then
-                        OUTPUT="$OUTPUT${BASH_REMATCH[1]} ${BASH_REMATCH[2]}\n" # save all these lines to the variable
-                    fi 
-                fi 
-            done < "$INFILE" 
-        fi 
-    done < "$INFILE"
+  # use awk to modify the output variable, excluding all diplicates or molecules that are present zero times
+  MODIFIED=$(echo -e "$OUTPUT" | awk '{print $1}' | awk '!seen[$0]++')
 
-    # use awk to modify the output variable, excluding all diplicates or molecules that are present zero times
-    MODIFIED=$(echo -e "$OUTPUT" | awk '{print $1}' | awk '!seen[$0]++')
+  # process these into tags
+  FINAL=$(echo "$MODIFIED" | awk '{print "    - molecule-"$1}')
 
-    # process these into tags
-    FINAL=$(echo "$MODIFIED" | awk '{print "    - molecule-"$1}')
-
-    # append molecule tag lines to file
-    echo "$FINAL" >> ${output_path}/${output_sysname}/atbrepo.yaml
-    echo "DUMMY LINE. This meaningless line will make this dataset fail validation.  Remove this line when you are finished editing" >> ${output_path}/${output_sysname}/atbrepo.yaml
+  # append molecule tag lines to file
+  echo "$FINAL" >> ${output_path}/${output_sysname}/atbrepo.yaml
+  echo "DUMMY LINE. This meaningless line will make this dataset fail validation.  Remove this line when you are finished editing" >> ${output_path}/${output_sysname}/atbrepo.yaml
 
 
-    # copy trajectory data
+  # copy trajectory data
 
-    mkdir ${output_path}/${output_sysname}/trajectory -p # folder is required regardless of whether trajectories are included
-    # copy trajectories unless --notrj was specified
-    if [ "$notrj" == false ]; then
-        files=false
-        if [ -f "${input_path}/${input_sysname}.xtc" ]; then 
-            echo "copying trajectory file ${input_path}/${input_sysname}.xtc"
-            echo
-            rsync --progress ${input_path}/${input_sysname}.xtc ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.xtc # use rsync for a progress bar and for data fidelity; trajectories are big
-            files=true
-        fi
-        if [ -f "${input_path}/${input_sysname}.trr" ]; then 
-            echo "copying trajectory file ${input_path}/${input_sysname}.trr"
-            echo "ALERT: MAKE SURE YOU ACTUALLY WANT THIS, .trr FILES ARE USUALLY ENOURMOUS"
-            echo
-            rsync --progress ${input_path}/${input_sysname}.trr ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.trr # use rsync for a progress bar and for data fidelity; trajectories are big
-            files=true
-        fi
-        if [ $files == false ]; then
-            "ALERT: no trajectory files were found with file names ${input_path}/${input_sysname}.(xtc|trr)"
-        fi
-    else
-        echo "--notrj specified, trajectories not copied"
-    fi
+  mkdir ${output_path}/${output_sysname}/trajectory -p # folder is required regardless of whether trajectories are included
+  # copy trajectories unless --notrj was specified
+  if [ "$notrj" == false ]; then
+      files=false
+      if [ -f "${input_path}/${input_sysname}.xtc" ]; then 
+          echo "copying trajectory file ${input_path}/${input_sysname}.xtc"
+          echo
+          rsync --progress ${input_path}/${input_sysname}.xtc ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.xtc # use rsync for a progress bar and for data fidelity; trajectories are big
+          files=true
+      fi
+      if [ -f "${input_path}/${input_sysname}.trr" ]; then 
+          echo "copying trajectory file ${input_path}/${input_sysname}.trr"
+          echo "ALERT: MAKE SURE YOU ACTUALLY WANT THIS, .trr FILES ARE USUALLY ENOURMOUS"
+          echo
+          rsync --progress ${input_path}/${input_sysname}.trr ${output_path}/${output_sysname}/trajectory/${output_sysname}_trajectory_00001.trr # use rsync for a progress bar and for data fidelity; trajectories are big
+          files=true
+      fi
+      if [ $files == false ]; then
+          "ALERT: no trajectory files were found with file names ${input_path}/${input_sysname}.(xtc|trr)"
+      fi
+  else
+      echo "--notrj specified, trajectories not copied"
+  fi
 
 
 
