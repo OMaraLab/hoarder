@@ -3,7 +3,7 @@ echo ""
 
 usage() {
 
-  echo "hoarder: Helpful OMara to ACSC Repository Dataset Efficient Reshaper"
+  echo "hoarder: a Helpful OMara to ACSC Repository Dataset Export Reshaper"
   echo ""
   echo "Script to copy a simulation replicate into a dataset with the directory structure"
   echo "suitable for the atb acsc repository at https://molecular-dynamics.atb.uq.edu.au"
