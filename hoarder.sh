@@ -202,7 +202,7 @@ else
   echo "--dry-run:" $dry_run
 fi
 #   echo "--multistep:" $multistep
-# if [ "$multistep" = true ]; then
+if [ "$multistep" = true ]; then
 #   echo "Will look for all files distributed across multiple run steps" 
 
     # set up rename_files function for multistep runs
@@ -264,8 +264,10 @@ fi
   mkdir ${output_path}/${output_sysname}/control -p
   cp ${input_path}/${input_sysname}.mdp ${output_path}/${output_sysname}/control/${output_sysname}_control_00001.mdp
 
+  mkdir ${output_path}/${output_sysname}/miscellaneous -p
+
   if [ -f "${input_path}/${input_path}.ndx" ]; then       # for now I'm capturing the index files in the control directory, but sharif is going to chat to his team about how we want to handle these going forward
-    cp ${input_path}/${input_sysname}.ndx ${output_path}/${output_sysname}/control/${output_sysname}_control_00002.ndx
+    cp ${input_path}/${input_sysname}.ndx ${output_path}/${output_sysname}/miscellaneous/${output_sysname}_miscellaneous-files.ndx
   fi
   # copy energy files if any exist
 
