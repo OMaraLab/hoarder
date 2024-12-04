@@ -266,13 +266,13 @@ fi
 
   mkdir ${output_path}/${output_sysname}/miscellaneous -p
 
-  if [ -f "${input_path}/${input_path}.ndx" ]; then       # for now I'm capturing the index files in the control directory, but sharif is going to chat to his team about how we want to handle these going forward
+  if [ -f "${input_path}/${input_sysname}.ndx" ]; then       # for now I'm capturing the index files in the control directory, but sharif is going to chat to his team about how we want to handle these going forward
     cp ${input_path}/${input_sysname}.ndx ${output_path}/${output_sysname}/miscellaneous/${output_sysname}_miscellaneous-files.ndx
   fi
   # copy energy files if any exist
 
   mkdir ${output_path}/${output_sysname}/energy -p
-  if [ -f "${input_path}/${input_path}.edr" ]; then 
+  if [ -f "${input_path}/${input_sysname}.edr" ]; then 
       cp ${input_path}/${input_sysname}.edr ${output_path}/${output_sysname}/energy/${output_sysname}_energy_00001.edr
   fi
 
